@@ -1,0 +1,13 @@
+NRRD0004
+# Complete NRRD file format specification at:
+# http://teem.sourceforge.net/nrrd/format.html
+type: int
+dimension: 3
+space: left-posterior-superior
+sizes: 40 38 8
+space directions: (-0.625,0,0) (0,-0.625,0) (0,0,2.5)
+kinds: domain domain domain
+endian: little
+encoding: gzip
+space origin: (-42.208707809448242,65.41217613220212,-165.91154479980463)
+data file: 2 2OPAGELS16STANDARD3202.51404001.4-subvolume-scale_1.raw.gz
