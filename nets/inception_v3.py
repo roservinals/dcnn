@@ -481,7 +481,6 @@ def inception_v3(inputs,
   if depth_multiplier <= 0:
     raise ValueError('depth_multiplier is not greater than zero.')
   depth = lambda d: max(int(d * depth_multiplier), min_depth)
-
   with tf.variable_scope(scope, 'InceptionV3', [inputs], reuse=reuse) as scope:
     with slim.arg_scope([slim.batch_norm, slim.dropout],
                         is_training=is_training):

@@ -183,7 +183,7 @@ tf.app.flags.DEFINE_string(
     'model_name', 'inception_v3', 'The name of the architecture to train.')
 
 tf.app.flags.DEFINE_string(
-    'preprocessing_name', None, 'The name of the preprocessing to use. If left '
+    'preprocessing_name', 'tumours', 'The name of the preprocessing to use. If left '
     'as `None`, then the model_name flag is used.')
 
 tf.app.flags.DEFINE_integer(
@@ -432,12 +432,11 @@ def main(_):
           common_queue_capacity=20 * FLAGS.batch_size,
           common_queue_min=10 * FLAGS.batch_size)
       [image, label] = provider.get(['image', 'label'])
-      label -= FLAGS.labels_offset
 
+      label -= FLAGS.labels_offset
       train_image_size = FLAGS.train_image_size or network_fn.default_image_size
 
-      image = image_preprocessing_fn(image, train_image_size, train_image_size)
-
+      image = image_preprocessing_fn(image, 16, 16)
       images, labels = tf.train.batch(
           [image, label],
           batch_size=FLAGS.batch_size,
@@ -447,7 +446,6 @@ def main(_):
           labels, dataset.num_classes - FLAGS.labels_offset)
       batch_queue = slim.prefetch_queue.prefetch_queue(
           [images, labels], capacity=2 * deploy_config.num_clones)
-
     ####################
     # Define the model #
     ####################
@@ -470,7 +468,7 @@ def main(_):
 
     # Gather initial summaries.
     summaries = set(tf.get_collection(tf.GraphKeys.SUMMARIES))
-
+    print('#################################')
     clones = model_deploy.create_clones(deploy_config, clone_fn, [batch_queue])
     first_clone_scope = deploy_config.clone_scope(0)
     # Gather update_ops from the first clone. These contain, for example,

@@ -24,6 +24,7 @@ from preprocessing import cifarnet_preprocessing
 from preprocessing import inception_preprocessing
 from preprocessing import lenet_preprocessing
 from preprocessing import vgg_preprocessing
+from preprocessing import tumours_preprocessing
 
 slim = tf.contrib.slim
 
@@ -46,6 +47,7 @@ def get_preprocessing(name, is_training=False):
   """
   preprocessing_fn_map = {
       'cifarnet': cifarnet_preprocessing,
+      'tumours': tumours_preprocessing,
       'inception': inception_preprocessing,
       'inception_v1': inception_preprocessing,
       'inception_v2': inception_preprocessing,
