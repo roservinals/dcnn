@@ -437,11 +437,19 @@ def main(_):
       train_image_size = FLAGS.train_image_size or network_fn.default_image_size
 
       image = image_preprocessing_fn(image, 16, 16)
+    #   print('##################################')
+    #   print(image)
+    #   print(label)
+    #   print('##################################')
       images, labels = tf.train.batch(
           [image, label],
           batch_size=FLAGS.batch_size,
           num_threads=FLAGS.num_preprocessing_threads,
           capacity=5 * FLAGS.batch_size)
+    #   print('----------------------------------------')
+    #   print(images)
+    #   print(labels)
+    #   print('----------------------------------------')
       labels = slim.one_hot_encoding(
           labels, dataset.num_classes - FLAGS.labels_offset)
       batch_queue = slim.prefetch_queue.prefetch_queue(
@@ -470,7 +478,7 @@ def main(_):
 
     # Gather initial summaries.
     summaries = set(tf.get_collection(tf.GraphKeys.SUMMARIES))
-    print('#################################')
+    #print('################ERROR#################')
     clones = model_deploy.create_clones(deploy_config, clone_fn, [batch_queue])
     first_clone_scope = deploy_config.clone_scope(0)
     # Gather update_ops from the first clone. These contain, for example,

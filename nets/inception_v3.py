@@ -91,7 +91,7 @@ def inception_v3_base(inputs,
   # end_points will collect relevant activations for external use, for example
   # summaries or losses.
   end_points = {}
-
+  final_endpoint='Conv2d_2a_3x3'
   if depth_multiplier <= 0:
     raise ValueError('depth_multiplier is not greater than zero.')
   depth = lambda d: max(int(d * depth_multiplier), min_depth)
@@ -478,6 +478,7 @@ def inception_v3(inputs,
   Raises:
     ValueError: if 'depth_multiplier' is less than or equal to zero.
   """
+  print('---------INCEPTION INPUT: '+str(inputs))
   if depth_multiplier <= 0:
     raise ValueError('depth_multiplier is not greater than zero.')
   depth = lambda d: max(int(d * depth_multiplier), min_depth)
