@@ -397,7 +397,7 @@ def main(_):
 
     # Create global_step
     with tf.device(deploy_config.variables_device()):
-      global_step = slim.create_global_step()
+      global_step = tf.train.create_global_step()
 
     ######################
     # Select the dataset #
@@ -446,11 +446,13 @@ def main(_):
           labels, dataset.num_classes - FLAGS.labels_offset)
       batch_queue = slim.prefetch_queue.prefetch_queue(
           [images, labels], capacity=2 * deploy_config.num_clones)
+      
     ####################
     # Define the model #
     ####################
     def clone_fn(batch_queue):
       """Allows data parallelism by creating multiple clones of network_fn."""
+
       images, labels = batch_queue.dequeue()
       logits, end_points = network_fn(images)
 
