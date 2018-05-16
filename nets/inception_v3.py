@@ -91,7 +91,7 @@ def inception_v3_base(inputs,
   # end_points will collect relevant activations for external use, for example
   # summaries or losses.
   end_points = {}
-  final_endpoint='Conv2d_2a_3x3'
+  #final_endpoint='Conv2d_2a_3x3'
   if depth_multiplier <= 0:
     raise ValueError('depth_multiplier is not greater than zero.')
   depth = lambda d: max(int(d * depth_multiplier), min_depth)
@@ -478,7 +478,7 @@ def inception_v3(inputs,
   Raises:
     ValueError: if 'depth_multiplier' is less than or equal to zero.
   """
-  print('---------INCEPTION INPUT: '+str(inputs))
+  print('------------INCEPTION INPUT: '+str(inputs))
   if depth_multiplier <= 0:
     raise ValueError('depth_multiplier is not greater than zero.')
   depth = lambda d: max(int(d * depth_multiplier), min_depth)
@@ -488,7 +488,9 @@ def inception_v3(inputs,
       net, end_points = inception_v3_base(
           inputs, scope=scope, min_depth=min_depth,
           depth_multiplier=depth_multiplier)
-
+      print('############### '+str(net))
+      print('############### '+str(num_classes))
+      print('############### '+str(end_points))
       # Auxiliary Head logits
       if create_aux_logits and num_classes:
         with slim.arg_scope([slim.conv2d, slim.max_pool2d, slim.avg_pool2d],
