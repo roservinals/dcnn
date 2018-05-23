@@ -31,7 +31,7 @@ tf.app.flags.DEFINE_string(
     'master', '', 'The address of the TensorFlow master to use.')
 
 tf.app.flags.DEFINE_string(
-    'train_dir', '/tmp/tfmodel/',
+    'train_dir', '/tmp/train_dir/',
     'Directory where checkpoints and event logs are written to.')
 
 tf.app.flags.DEFINE_integer('num_clones', 1,
@@ -437,10 +437,10 @@ def main(_):
       train_image_size = FLAGS.train_image_size or network_fn.default_image_size
 
       image = image_preprocessing_fn(image, 16, 16)
-    #   print('##################################')
-    #   print(image)
-    #   print(label)
-    #   print('##################################')
+      print('##################################')
+      print(image)
+      print(label)
+      print('##################################')
       images, labels = tf.train.batch(
           [image, label],
           batch_size=FLAGS.batch_size,
@@ -564,6 +564,7 @@ def main(_):
     ###########################
     # Kicks off the training. #
     ###########################
+    print('######################ERROR###################')
     slim.learning.train(
         train_tensor,
         logdir=FLAGS.train_dir,

@@ -27,7 +27,7 @@ trunc_normal = lambda stddev: tf.truncated_normal_initializer(0.0, stddev)
 
 
 def inception_v3_base(inputs,
-                      final_endpoint='Mixed_7c',
+                      final_endpoint='Conv2d_4a_3x3',
                       min_depth=16,
                       depth_multiplier=1.0,
                       scope=None):
@@ -103,36 +103,43 @@ def inception_v3_base(inputs,
       end_point = 'Conv2d_1a_3x3'
       net = slim.conv2d(inputs, depth(32), [3, 3], stride=2, scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 149 x 149 x 32
       end_point = 'Conv2d_2a_3x3'
       net = slim.conv2d(net, depth(32), [3, 3], scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 147 x 147 x 32
       end_point = 'Conv2d_2b_3x3'
       net = slim.conv2d(net, depth(64), [3, 3], padding='SAME', scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 147 x 147 x 64
       end_point = 'MaxPool_3a_3x3'
       net = slim.max_pool2d(net, [3, 3], stride=2, scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 73 x 73 x 64
       end_point = 'Conv2d_3b_1x1'
       net = slim.conv2d(net, depth(80), [1, 1], scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 73 x 73 x 80.
       end_point = 'Conv2d_4a_3x3'
-      net = slim.conv2d(net, depth(192), [3, 3], scope=end_point)
+      net = slim.conv2d(net, depth(192), [2, 2], scope=end_point)
       end_points[end_point] = net
+      print(net)
       if end_point == final_endpoint: return net, end_points
       # 71 x 71 x 192.
       end_point = 'MaxPool_5a_3x3'
       net = slim.max_pool2d(net, [3, 3], stride=2, scope=end_point)
       end_points[end_point] = net
+      #print(net)
       if end_point == final_endpoint: return net, end_points
       # 35 x 35 x 192.
 
@@ -160,6 +167,7 @@ def inception_v3_base(inputs,
                                  scope='Conv2d_0b_1x1')
         net = tf.concat(axis=3, values=[branch_0, branch_1, branch_2, branch_3])
       end_points[end_point] = net
+      print(net)
       if end_point == final_endpoint: return net, end_points
 
       # mixed_1: 35 x 35 x 288.
@@ -183,6 +191,7 @@ def inception_v3_base(inputs,
           branch_3 = slim.conv2d(branch_3, depth(64), [1, 1],
                                  scope='Conv2d_0b_1x1')
         net = tf.concat(axis=3, values=[branch_0, branch_1, branch_2, branch_3])
+        print(net)
       end_points[end_point] = net
       if end_point == final_endpoint: return net, end_points
 
@@ -206,6 +215,7 @@ def inception_v3_base(inputs,
           branch_3 = slim.conv2d(branch_3, depth(64), [1, 1],
                                  scope='Conv2d_0b_1x1')
         net = tf.concat(axis=3, values=[branch_0, branch_1, branch_2, branch_3])
+        print(net)
       end_points[end_point] = net
       if end_point == final_endpoint: return net, end_points
 
@@ -225,6 +235,7 @@ def inception_v3_base(inputs,
           branch_2 = slim.max_pool2d(net, [3, 3], stride=2, padding='VALID',
                                      scope='MaxPool_1a_3x3')
         net = tf.concat(axis=3, values=[branch_0, branch_1, branch_2])
+        print(net)
       end_points[end_point] = net
       if end_point == final_endpoint: return net, end_points
 
@@ -495,11 +506,11 @@ def inception_v3(inputs,
       if create_aux_logits and num_classes:
         with slim.arg_scope([slim.conv2d, slim.max_pool2d, slim.avg_pool2d],
                             stride=1, padding='SAME'):
-          aux_logits = end_points['Mixed_6e']
+          aux_logits = end_points['Conv2d_4a_3x3']
           with tf.variable_scope('AuxLogits'):
-            aux_logits = slim.avg_pool2d(
-                aux_logits, [5, 5], stride=3, padding='VALID',
-                scope='AvgPool_1a_5x5')
+            # aux_logits = slim.avg_pool2d(
+            #     aux_logits, [5, 5], stride=3, padding='VALID',
+            #     scope='AvgPool_1a_5x5')
             aux_logits = slim.conv2d(aux_logits, depth(128), [1, 1],
                                      scope='Conv2d_1b_1x1')
 
